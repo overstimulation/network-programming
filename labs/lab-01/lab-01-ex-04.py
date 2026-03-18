@@ -17,6 +17,7 @@ def main():
 
     except Exception as error:
         print(f"[ERROR] Could not resolve hostname: {error}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

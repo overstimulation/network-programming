@@ -15,6 +15,7 @@ def main():
         print(f"[INFO] The IP address for {hostname} is {ip_address}")
     except Exception as error:
         print(f"[ERROR] Could not resolve hostname '{hostname}': {error}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

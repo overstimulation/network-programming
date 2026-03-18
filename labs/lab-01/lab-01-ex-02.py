@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 
 
 def main():
@@ -16,6 +17,7 @@ def main():
 
     except IOError as error:
         print(f"[ERROR] Could not read or write the file: {error}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
