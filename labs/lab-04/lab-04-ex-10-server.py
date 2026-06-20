@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+import socket
+import sys
+from datetime import datetime
+
+HOST = "127.0.0.1"
+
+
+def timestamp():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def check_syntax(txt):
+    parts = txt.split(";")
+    if len(parts) != 7:
+        return "BAD_SYNTAX"
+    if (
+        parts[0] != "zad13odp"
+        or parts[1] != "src"
+        or parts[3] != "dst"
+        or parts[5] != "data"
+    ):
+        return "BAD_SYNTAX"
+    try:
+        src_port = int(parts[2])
+        dst_port = int(parts[4])
+        data = parts[6]
+    except ValueError:
+        return "BAD_SYNTAX"
+    if src_port == 2900 and dst_port == 35211 and data == "hello :)":
+        return "TAK"
+    return "NIE"
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"[ERROR] Usage: {sys.argv[0]} <port>")
+        sys.exit(1)
+    try:
+        port = int(sys.argv[1])
+    except ValueError:
+        print("[ERROR] Port must be a valid integer.")
+        sys.exit(1)
+
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((HOST, port))
+        print(f"[INFO] UDP validation server (zad13odp) listening on {HOST}:{port}.")
+        while True:
+            data, addr = s.recvfrom(1024)
+            msg = data.decode()
+            print(f"[{timestamp()}] [INFO] Received from {addr}: '{msg}'")
+            answer = check_syntax(msg)
+            s.sendto(answer.encode(), addr)
+            print(f"[{timestamp()}] [INFO] Sent to {addr}: '{answer}'")
+
+
+if __name__ == "__main__":
+    main()
