@@ -2,6 +2,9 @@
 import sys
 import socket
 
+MIN_PORT = 1
+MAX_PORT = 1024
+
 
 def main():
     if len(sys.argv) != 2:
@@ -9,14 +12,14 @@ def main():
         sys.exit(1)
 
     host = sys.argv[1]
-    print(f"[INFO] Scanning ports 1-1024 on {host}...")
+    print(f"[INFO] Scanning ports {MIN_PORT}-{MAX_PORT} on {host}...")
 
-    for port in range(1, 1025):
+    for port in range(MIN_PORT, MAX_PORT + 1):
         try:
-            with socket.socket() as sock:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.settimeout(0.3)
                 sock.connect((host, port))
-                print(f"[+] Port {port} is OPEN")
+                print(f"[INFO] Port {port} is OPEN")
         except Exception:
             pass
 
